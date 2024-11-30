@@ -1,7 +1,7 @@
 import './index.scss'
 import {useSelect} from "@wordpress/data"
-
-import React from 'react'
+import {useState, useEffect} from 'react'
+import apiFetch from '@wordpress/api-fetch'
 
 wp.blocks.registerBlockType('my-block-use-post/blockusepostdata', {
     title: 'Block use post data',
@@ -16,6 +16,19 @@ wp.blocks.registerBlockType('my-block-use-post/blockusepostdata', {
 });
 
 function EditComponent(props) {
+    const [thePreview, setThePreview] = useState('')
+
+    useEffect(() => {
+        async function go() {
+            const response = await apiFetch({
+                path: `/blockusepostdata/v1/getHTML?postId=${props.attributes.postId}`,
+                method: 'GET'
+            })
+            setThePreview(response)
+        }
+        go()
+    }, [props.attributes.postId])
+
     const allPost = useSelect(select => { // 当数据存储中的文章数据更新时，useSelect 会触发组件重新渲染。
         return select('core').getEntityRecords('postType', 'post', {per_page: -1})
     })
@@ -37,6 +50,9 @@ function EditComponent(props) {
                     })
                 }
             </select>
+
+            <div dangerouslySetInnerHTML={{__html: thePreview}}></div>
         </div>
+
     )
 }

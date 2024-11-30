@@ -13,7 +13,7 @@ function generateHTML($id) {
             <div>
                 <div style="width: 200px; height: 200px; background-image: url(<?php the_post_thumbnail_url(); ?>);"></div>
                 <div>
-                    <h5><?php the_title(); ?></h5>
+                    <h5><?php echo esc_html(the_title()); ?></h5>
                     <p><?php echo wp_trim_words(get_the_content(),30); ?></p>
                 </div>
             </div>
