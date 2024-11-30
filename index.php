@@ -5,6 +5,9 @@
 
 if(!defined('ABSPATH')) exit;
 
+require_once plugin_dir_path(__FILE__) . 'inc/generateHTML.php';
+
+//wp.data.select('core').getEntityRecords('postType', 'post', {per_page: -1}) // 浏览器控制台可以通过这个查询帖子，需要键入2次
 
 class BlockUsePostData {
     function __construct() {
@@ -20,9 +23,12 @@ class BlockUsePostData {
         ));
     }
     function theHTML($attributes) {
-        ob_start(); ?>
-        <div>123123123123</div>
-        <?php return ob_get_clean();
+        if($attributes['postId']) {
+            wp_enqueue_style('cusblockusepostcss');
+            return generateHTML($attributes['postId']);
+        } else {
+            return NULL;
+        }
     }
 }
 
